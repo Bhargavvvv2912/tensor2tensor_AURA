@@ -380,7 +380,7 @@ class DependencyAgent:
             project_extras = self.config.get("PROJECT_EXTRAS", "")
             print(f"\n--> Bootstrap Step 2: Installing project from current directory ('.') in editable mode...")
             
-            pip_command_project = [python_executable, "-m", "pip", "install", "--no-build-isolation", "-e", f".{project_extras}"]
+            pip_command_project = [python_executable, "-m", "pip", "install", "-e", f".{project_extras}"]
             
             _, stderr_project, returncode_project = run_command(pip_command_project)
             if returncode_project != 0:
@@ -419,7 +419,6 @@ class DependencyAgent:
 
         pip_command_core = [
             python_executable, "-m", "pip", "install", 
-            "--no-build-isolation", 
             "--no-cache-dir", 
             "-r", str(temp_reqs_path.resolve())
         ]
@@ -449,7 +448,7 @@ class DependencyAgent:
             project_extras = self.config.get("PROJECT_EXTRAS", "")
             print(f"\n--> Probe Step 2: Installing project from current directory ('.')...")
             
-            pip_command_project = [python_executable, "-m", "pip", "install", "--no-build-isolation", f".{project_extras}"]
+            pip_command_project = [python_executable, "-m", "pip", "install", f".{project_extras}"]
             
             _, stderr_project, returncode_project = run_command(pip_command_project)
             if returncode_project != 0:
@@ -605,7 +604,6 @@ class DependencyAgent:
             
             pip_command = [
                 python_executable, "-m", "pip", "install", 
-                "--no-build-isolation", 
                 "--no-cache-dir", 
                 "--dry-run"
             ] + requirements_list_for_check
@@ -704,7 +702,6 @@ class DependencyAgent:
         
         pip_command_tools = [
             python_executable, "-m", "pip", "install", 
-            "--no-build-isolation", 
             "--no-cache-dir"
         ] + requirements_list
         
@@ -720,7 +717,7 @@ class DependencyAgent:
         if self.config.get("IS_INSTALLABLE_PACKAGE", False):
             print("\n--> Stage 2: Building and installing the project...")
             project_extras = self.config.get("PROJECT_EXTRAS", "")
-            build_install_command = [python_executable, "-m", "pip", "install", "--no-build-isolation", f"./{project_dir}{project_extras}"]
+            build_install_command = [python_executable, "-m", "pip", "install", f"./{project_dir}{project_extras}"]
             _, stderr_build, returncode_build = run_command(build_install_command, cwd=project_dir)
             if returncode_build != 0:
                 print("--> ERROR: Project build/install failed with the co-resolution set.")
