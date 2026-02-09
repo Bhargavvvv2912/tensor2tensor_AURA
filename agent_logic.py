@@ -367,8 +367,7 @@ class DependencyAgent:
         req_path = str(requirements_source.resolve())
         
         pip_command_deps = [
-            python_executable, "-m", "pip", "install", 
-            "--no-build-isolation", 
+            python_executable, "-m", "pip", "install",  
             "--no-cache-dir", 
             "-r", req_path
         ]
