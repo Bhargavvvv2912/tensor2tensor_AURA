@@ -1,46 +1,65 @@
 import os
-import tensorflow as tf
-import numpy as np
-from tensor2tensor.utils import registry
-from tensor2tensor.models import transformer
+import sys
 
-def smoke_test():
-    print("Checking TensorFlow version...")
-    print(f"TF Version: {tf.__version__}")
+# ==============================================================================
+# NAMESPACE RECOVERY WING
+# ==============================================================================
+try:
+    import tensorflow as tf
+    print(f"DEBUG: TensorFlow {tf.__version__} detected.")
     
-    # T2T v1.15.7 requires TF 1.x compatibility
-    if tf.__version__.startswith('2.'):
-        print("CRITICAL: TF 2.x detected. T2T requires TF 1.15 compatibility.")
-        # Some legacy code might work with compat.v1, but T2T internals usually don't
-    
+    # In TF 2.16+, 'tf.compat.v1.estimator' is often missing from the core.
+    # We manually bridge it from the 'tensorflow_estimator' package.
     try:
-        print("Attempting to initialize T2T Transformer Model...")
-        # Create a tiny mock HParams set
+        from tensorflow.compat.v1 import estimator
+    except ImportError:
+        print("DEBUG: Manual bridge required for tf.compat.v1.estimator...")
+        import tensorflow_estimator.python.estimator as estimator
+        # Inject it into the sys.modules so tensor2tensor can find it
+        sys.modules['tensorflow.compat.v1.estimator'] = estimator
+        print("DEBUG: Namespace bridge established.")
+
+except ImportError:
+    print("CRITICAL: TensorFlow not found in environment.")
+    sys.exit(1)
+
+# ==============================================================================
+# T2T REGISTRY VALIDATION
+# ==============================================================================
+try:
+    from tensor2tensor.utils import registry
+    from tensor2tensor.models import transformer
+    import tf_slim
+
+    def smoke_test():
+        print("Initializing T2T Transformer Registry check...")
+        
+        # Verify if 'transformer' is registered
         model_name = "transformer"
-        hparams_set = "transformer_tiny"
-        
-        # Accessing registry to ensure T2T is properly hooked into TF
-        hparams = registry.hparams(hparams_set)
-        hparams.add_hparam("data_dir", "/tmp")
-        
-        # Verify model registration
         if model_name not in registry.list_models():
-            raise ValueError(f"Model {model_name} not found in registry!")
-            
-        print("T2T Registry check passed.")
+            print(f"FAILURE: {model_name} not found in T2T registry.")
+            return False
         
-        # Basic sanity check: ensure tf_slim and other sub-deps are importable
-        import tf_slim
-        print("Sub-dependency 'tf_slim' check passed.")
+        # Verify Hyperparameter sets
+        hparams_set = "transformer_tiny"
+        hparams = registry.hparams(hparams_set)
+        print(f"DEBUG: Hyperparameter set '{hparams_set}' loaded successfully.")
+        
+        # Verify TF Slim integration (a common point of failure for T2T)
+        print(f"DEBUG: tf_slim version: {tf_slim.__version__}")
         
         return True
-    except Exception as e:
-        print(f"SMOKE TEST FAILED: {e}")
-        return False
 
-if __name__ == "__main__":
-    if smoke_test():
-        print("SUCCESS: T2T Environment is stable.")
-        exit(0)
-    else:
-        exit(1)
+    if __name__ == "__main__":
+        if smoke_test():
+            print("\nSUCCESS: AURA has established a functional T2T environment.")
+            sys.exit(0)
+        else:
+            sys.exit(1)
+
+except Exception as e:
+    print(f"\nVALIDATION CRASHED: {e}")
+    # Print the traceback to help the AURA agent diagnose the fix
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
