@@ -4,16 +4,16 @@ tensorflow==2.15.0
 tensorflow-estimator==2.15.0
 tensorflow-probability==0.23.0
 
-# Supporting ML Stack
+# Supporting ML Stack - Gated for Registry Stability
 bz2file==0.98
-dopamine-rl>=4.0.6           # Allow it to find a stable version
+dopamine-rl==4.0.6
+gym==0.23.1                  # <--- THE CRITICAL DOWNGRADE
 flask==3.0.0
 future==0.18.3
 gevent==23.9.1
 gin-config==0.5.0
 google-api-python-client==2.100.0
 gunicorn==21.2.0
-gym==0.25.2                  # Downgrade slightly to satisfy dopamine-rl
 h5py==3.10.0
 kfac==0.2.0
 mesh-tensorflow==0.1.21
