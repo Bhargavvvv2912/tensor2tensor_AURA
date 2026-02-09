@@ -1,0 +1,142 @@
+
+::group::Analyzing Codebase for Update Risk
+Usage scores calculated.
+::endgroup::
+INFO: Found pinned requirements. Running initial health check and regenerating lockfile...
+
+::group::Initial Baseline Health Check
+--> Bootstrap Step 1: Installing dependencies from 'requirements.txt'...
+--> Running command: '/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/bin/python -m pip install --no-cache-dir -r /home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/requirements.txt' in CWD: '.'
+
+--> Bootstrap Step 2: Installing project from current directory ('.') in editable mode...
+--> Running command: '/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/bin/python -m pip install -e .' in CWD: '.'
+
+--> Bootstrap Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/bin/python /home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/validation_T2T.py' in CWD: '.'
+--- Smoke Test Full Output ---
+STDOUT:
+
+
+STDERR:
+2026-02-09 18:34:17.316328: I external/local_tsl/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-02-09 18:34:17.347795: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-02-09 18:34:17.347835: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-02-09 18:34:17.348906: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2026-02-09 18:34:17.354244: I external/local_tsl/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-02-09 18:34:17.354433: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-02-09 18:34:18.322587: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+Traceback (most recent call last):
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/validation_T2T.py", line 9, in <module>
+    import tensorflow_probability as tfp
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/__init__.py", line 75, in <module>
+    from tensorflow_probability.python import *  # pylint: disable=wildcard-import
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/python/__init__.py", line 21, in <module>
+    from tensorflow_probability.python import bijectors
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/__init__.py", line 23, in <module>
+    from tensorflow_probability.python.bijectors.absolute_value import AbsoluteValue
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/absolute_value.py", line 23, in <module>
+    from tensorflow_probability.python.bijectors import bijector
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/bijector.py", line 33, in <module>
+    from tensorflow_probability.python.internal import distribution_util
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/distribution_util.py", line 29, in <module>
+    from tensorflow_probability.python.internal import prefer_static
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/prefer_static.py", line 193, in <module>
+    greater = _prefer_static(
+              ^^^^^^^^^^^^^^^
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/initial_check_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/prefer_static.py", line 47, in _prefer_static
+    raise ValueError(
+ValueError: Arg specs do not match: original=FullArgSpec(args=['x', 'y', 'name'], varargs=None, varkw=None, defaults=(None,), kwonlyargs=[], kwonlydefaults=None, annotations={'return': typing.Annotated[_any, <class 'tensorflow.security.fuzzing.py.annotation_types.Bool'>], 'x': typing.Annotated[_any, ~TV_Greater_T], 'y': typing.Annotated[_any, ~TV_Greater_T]}), static=FullArgSpec(args=['x', 'y', 'name'], varargs=None, varkw=None, defaults=(None,), kwonlyargs=[], kwonlydefaults=None, annotations={}), fn=<function greater at 0x7fad3f420ae0>
+
+--- End of Full Output ---
+::endgroup::
+::endgroup::
+
+::group::REPAIR MODE: stripping all version constraints
+--> Step 1: Extracting package names from broken requirements file...
+--> Step 2: Overwriting 'requirements.txt' with unpinned packages.
+
+--> Step 3: Retrying bootstrap with clean slate...
+::endgroup::
+
+::group::BOOTSTRAP: Establishing a Stable Baseline
+RETRY MODE: Attempting bootstrap with ALL version constraints removed...
+--> Bootstrap Step 1: Installing dependencies from 'requirements.txt'...
+--> Running command: '/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/bin/python -m pip install --no-cache-dir -r /home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/requirements.txt' in CWD: '.'
+
+--> Bootstrap Step 2: Installing project from current directory ('.') in editable mode...
+--> Running command: '/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/bin/python -m pip install -e .' in CWD: '.'
+
+--> Bootstrap Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/bin/python /home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/validation_T2T.py' in CWD: '.'
+--- Smoke Test Full Output ---
+STDOUT:
+
+
+STDERR:
+2026-02-09 18:35:50.129225: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-02-09 18:35:50.174479: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/validation_T2T.py", line 9, in <module>
+    import tensorflow_probability as tfp
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/__init__.py", line 75, in <module>
+    from tensorflow_probability.python import *  # pylint: disable=wildcard-import
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/__init__.py", line 21, in <module>
+    from tensorflow_probability.python import bijectors
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/__init__.py", line 23, in <module>
+    from tensorflow_probability.python.bijectors.absolute_value import AbsoluteValue
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/absolute_value.py", line 23, in <module>
+    from tensorflow_probability.python.bijectors import bijector
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/bijector.py", line 33, in <module>
+    from tensorflow_probability.python.internal import distribution_util
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/distribution_util.py", line 29, in <module>
+    from tensorflow_probability.python.internal import prefer_static
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/prefer_static.py", line 193, in <module>
+    greater = _prefer_static(
+              ^^^^^^^^^^^^^^^
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/prefer_static.py", line 47, in _prefer_static
+    raise ValueError(
+ValueError: Arg specs do not match: original=FullArgSpec(args=['x', 'y', 'name'], varargs=None, varkw=None, defaults=(None,), kwonlyargs=[], kwonlydefaults=None, annotations={'return': typing.Annotated[_any, <class 'tensorflow.security.fuzzing.py.annotation_types.Bool'>], 'x': typing.Annotated[_any, ~TV_Greater_T], 'y': typing.Annotated[_any, ~TV_Greater_T]}), static=FullArgSpec(args=['x', 'y', 'name'], varargs=None, varkw=None, defaults=(None,), kwonlyargs=[], kwonlydefaults=None, annotations={}), fn=<function greater at 0x7f387aed6c00>
+
+--- End of Full Output ---
+::endgroup::
+
+::group::View Failure Log
+2026-02-09 18:35:50.129225: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-02-09 18:35:50.174479: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/validation_T2T.py", line 9, in <module>
+    import tensorflow_probability as tfp
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/__init__.py", line 75, in <module>
+    from tensorflow_probability.python import *  # pylint: disable=wildcard-import
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/__init__.py", line 21, in <module>
+    from tensorflow_probability.python import bijectors
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/__init__.py", line 23, in <module>
+    from tensorflow_probability.python.bijectors.absolute_value import AbsoluteValue
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/absolute_value.py", line 23, in <module>
+    from tensorflow_probability.python.bijectors import bijector
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/bijectors/bijector.py", line 33, in <module>
+    from tensorflow_probability.python.internal import distribution_util
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/distribution_util.py", line 29, in <module>
+    from tensorflow_probability.python.internal import prefer_static
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/prefer_static.py", line 193, in <module>
+    greater = _prefer_static(
+              ^^^^^^^^^^^^^^^
+  File "/home/runner/work/tensor2tensor_AURA/tensor2tensor_AURA/bootstrap_venv/lib/python3.11/site-packages/tensorflow_probability/python/internal/prefer_static.py", line 47, in _prefer_static
+    raise ValueError(
+ValueError: Arg specs do not match: original=FullArgSpec(args=['x', 'y', 'name'], varargs=None, varkw=None, defaults=(None,), kwonlyargs=[], kwonlydefaults=None, annotations={'return': typing.Annotated[_any, <class 'tensorflow.security.fuzzing.py.annotation_types.Bool'>], 'x': typing.Annotated[_any, ~TV_Greater_T], 'y': typing.Annotated[_any, ~TV_Greater_T]}), static=FullArgSpec(args=['x', 'y', 'name'], varargs=None, varkw=None, defaults=(None,), kwonlyargs=[], kwonlydefaults=None, annotations={}), fn=<function greater at 0x7f387aed6c00>
+
+::endgroup::
