@@ -3,6 +3,7 @@ absl-py>=1.0.0
 tensorflow==2.15.0
 tensorflow-estimator==2.15.0
 tensorflow-probability==0.23.0
+setuptools<70.0.0
 
 # Supporting ML Stack - Gated for Registry Stability
 bz2file==0.98
