@@ -91,8 +91,16 @@ class DependencyAgent:
             sys.exit(f"Error: {self.config['REQUIREMENTS_FILE']} not found.")
             
         with open(self.requirements_path, "r") as f:
+            # Filter for non-empty lines that aren't comments
             lines = [line.strip() for line in f if line.strip() and not line.strip().startswith('#')]
-        is_fully_pinned = all('==' in line or line.startswith('-e') for line in lines)
+        
+        # Updated logic: Check for ANY version constraint operator (==, >=, <=, >, <)
+        # This ensures manual fixes like 'absl-py>=1.0.0' don't trigger the "Broken Baseline" repair mode.
+        is_fully_pinned = all(
+            any(op in line for op in ['==', '>=', '<=', '>', '<']) or line.startswith('-e') 
+            for line in lines
+        )
+        
         return is_fully_pinned, lines
 
     def _bootstrap_unpinned_requirements(self, is_fallback_attempt=False):
