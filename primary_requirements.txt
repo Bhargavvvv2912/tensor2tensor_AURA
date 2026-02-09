@@ -24,6 +24,7 @@ tensorflow-addons
 tensorflow-datasets
 tensorflow-gan
 tensorflow-probability
+tensorflow-estimator
 tf_slim
 tqdm
 tensorflow

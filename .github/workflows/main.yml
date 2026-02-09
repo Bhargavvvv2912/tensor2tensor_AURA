@@ -18,40 +18,40 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: 🧪 1. Run Pip Baseline (The 2020 Frozen Era)
+      - name: 🧪 1. Run Pip Baseline (The 2020 Fixed Era)
         continue-on-error: true
         run: |
           python -m venv baseline_env
-          ./baseline_env/bin/pip install --upgrade pip
-          # This uses your unconstrained requirements.txt
+          ./baseline_env/bin/pip install --upgrade pip setuptools wheel
+          # We use the updated requirements.txt with absl-py>=1.0.0
           ./baseline_env/bin/pip install -r requirements.txt
-          ./baseline_env/bin/python validation_t2t.py
+          ./baseline_env/bin/python validation_T2T.py
 
       - name: 💥 2. Run Pip Upgrade (The 2026 API Attack)
         continue-on-error: true
         run: |
           python -m venv upgrade_env
           ./upgrade_env/bin/pip install --upgrade pip
-          # Pip will grab TF 2.x here and break the validation script
-          ./upgrade_env/bin/pip install --upgrade -r primary_requirements.txt
-          ./upgrade_env/bin/python validation_t2t.py
+          ./upgrade_env/bin/pip install -r primary_requirements.txt
+          # FIXED FILENAME CASE: validation_T2T.py
+          ./upgrade_env/bin/python validation_T2T.py
 
       - name: 🤖 3. Run AURA Agent (The Resurrection Phase)
         run: |
           python -m venv --system-site-packages aura_env
+          ./aura_env/bin/pip install --upgrade pip setuptools wheel
           ./aura_env/bin/pip install google-genai google-api-core pypi-simple packaging pip-tools tenacity
-          # The agent will detect the TF 2.x crash and surgically find the TF 1.15.5 ceiling
           ./aura_env/bin/python -u dependency_agent.py | tee aura_t2t_execution.log
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      - name: 💾 Final Commit & Close Dataset
+      - name: 💾 Final Commit
         if: always()
         run: |
           git config --global user.name 'AURA Agent'
           git config --global user.email 'aura-agent@users.noreply.github.com'
           git add requirements.txt aura_t2t_execution.log
           if ! git diff --staged --quiet; then
-            git commit -m "🤖 [ASE-2026] REPO 36: Modernized Tensor2Tensor Stress Test [skip ci]"
+            git commit -m "🤖 [ASE-2026] REPO 36: Fixed T2T Stress Test [skip ci]"
             git push
           fi
